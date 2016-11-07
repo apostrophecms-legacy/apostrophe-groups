@@ -540,6 +540,11 @@ groups.Groups = function(options, callback) {
       req.extras.letter = req.query.letter;
     }
 
+    if (req.query.tags) {
+      options.tags = req.query.tags;
+      req.extras.tags = req.query.tags;
+    }
+
     options.search = req.query.search || req.query.q;
 
     if (req.query.autocomplete) {
@@ -560,6 +565,7 @@ groups.Groups = function(options, callback) {
       if (err) {
         return callback(err);
       }
+      req.extras.total = results.total;
       self.setPagerTotal(req, results.total);
       req.extras.people = results.snippets;
       if ((req.xhr || req.query.xhr) && (!req.query.apos_refresh) && (!req.query.pageInformation)) {
