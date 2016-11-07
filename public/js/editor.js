@@ -23,19 +23,31 @@ function AposGroups(options) {
   aposSchemas.addFieldType({
     name: 'a2People',
     displayer: function(snippet, name, $field, $el, field, callback) {
-      $el.find('[data-name="people"]').selective({
-        sortable: options.peopleSortable,
-        extras: field.extras,
-        source: aposPages.getType('people')._action + '/autocomplete',
-        data: _.map(snippet._people || [], function(person) {
-          var data = { label: person.title, value: person._id };
-          if (person.groupExtras && person.groupExtras[snippet._id]) {
-            $.extend(true, data, person.groupExtras[snippet._id]);
-          }
-          return data;
+      var source = aposPages.getType('people')._action + '/autocomplete';
+      $.jsonCall(source, {
+        values: _.map(snippet.people || [], function(person) {
+          return person._id;
         })
+      }, function(results) {
+        var labelMap = {};
+        _.each(results, function(result) {
+          labelMap[result.value] = result.label;
+        });
+        $el.find('[data-name="people"]').selective({
+          sortable: options.peopleSortable,
+          extras: field.extras,
+          source: source,
+          data: _.map(snippet._people || [], function(person) {
+            var label = labelMap[person._id];
+            var data = { label: label, value: person._id };
+            if (person.groupExtras && person.groupExtras[snippet._id]) {
+              $.extend(true, data, person.groupExtras[snippet._id]);
+            }
+            return data;
+          })
+        });
+        return callback();
       });
-      return callback();
     },
     converter: function(data, name, $field, $el, field, callback) {
       data._peopleInfo = $el.find('[data-name="people"]').selective('get', { incomplete: true });
