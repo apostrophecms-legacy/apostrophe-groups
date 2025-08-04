@@ -1,3 +1,7 @@
+# ⛔️ **DEPRECATED** — do not use for new projects
+
+See [our current docs](https://docs.apostrophecms.org/)
+
 # apostrophe-groups
 
 The `apostrophe-groups` module, together with [apostrophe-people](http://github.com/punkave/apostrophe-people), adds a directory of people and "groups" (such as departments) to sites powered by the [Apostrophe](http://github.com/punkave/apostrophe-sandbox) content management system.
